@@ -3,22 +3,15 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 import time
-import signal
-
-# Define a timeout handler
-class TimeoutException(Exception):
-    pass
-
-def timeout_handler(signum, frame):
-    raise TimeoutException
 
 # Function to extract text from <p> tags given a URL
-def extract_paragraph_text(url, driver):
+def extract_paragraph_text(url, driver, timeout=30):
     driver.get(url)
     
-    # Initialize WebDriverWait
-    wait = WebDriverWait(driver, 10)
+    # Initialize WebDriverWait with a custom timeout
+    wait = WebDriverWait(driver, timeout)
     
     try:
         # Wait for <p> tags to be present on the page
@@ -35,15 +28,16 @@ def extract_paragraph_text(url, driver):
         
         return paragraph_text if paragraph_text else "No text found"
     
+    except TimeoutException:
+        print(f"Timeout loading page {url}")
+        return "Timeout"
+    
     except Exception as e:
         print(f"Error loading page {url}: {e}")
         return "Error loading page"
 
 # Set up the Selenium WebDriver (e.g., Chrome)
 driver = webdriver.Chrome()
-
-# Set up the signal handler for timeout
-signal.signal(signal.SIGALRM, timeout_handler)
 
 # Open the CSV file with links and titles
 with open('links2_unique.csv', mode='r', encoding='utf-8') as input_file:
@@ -69,26 +63,14 @@ with open('links2_unique.csv', mode='r', encoding='utf-8') as input_file:
                 start_time = time.time()
                 
                 try:
-                    # Set alarm for 30 seconds
-                    signal.alarm(30)
+                    # Extract paragraph text from the link with a timeout
+                    text = extract_paragraph_text(url, driver, timeout=30)
                     
-                    try:
-                        # Extract paragraph text from the link
-                        text = extract_paragraph_text(url, driver)
-                        
-                        # Check if the operation took more than 10 seconds
-                        elapsed_time = time.time() - start_time
-                        if elapsed_time > 10:
-                            print(f"Skipped link due to timeout: {url}")
-                            continue
-                    
-                    except TimeoutException:
+                    # Check if the operation took more than 10 seconds
+                    elapsed_time = time.time() - start_time
+                    if elapsed_time > 10:
                         print(f"Skipped link due to timeout: {url}")
-                        text = "Timeout"
-                    
-                    finally:
-                        # Cancel the alarm
-                        signal.alarm(0)
+                        continue
                 
                 except Exception as e:
                     print(f"Error processing page {url}: {e}")

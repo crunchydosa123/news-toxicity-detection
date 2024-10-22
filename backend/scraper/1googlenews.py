@@ -10,7 +10,7 @@ min_length = len("https://news.google.com/topics/CAAqKggKIiRDQkFTRlFvSUwyMHZNRGR
 domains = ["thehindu.com", "newindianexpress.com", "news18.com"]
 
 # Array with keywords to replace
-keywords = ["murder", "rape", "terror", "victory"]
+keywords = ["cricket", "rape", "terror", "victory"]
 
 # Set up the Selenium WebDriver (e.g., Chrome)
 driver = webdriver.Chrome()
