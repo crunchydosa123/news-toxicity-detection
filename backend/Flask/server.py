@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import CORS
 import sys
 import os
 import importlib.util
@@ -24,6 +25,7 @@ extract_text_from_articles = googlenews_text.extract_text_from_articles
 analyze_sentiment = bert_model.analyze_sentiment  # Import the analyze sentiment function
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for the Flask app
 
 @app.route('/scrape', methods=['GET'])
 def scrape_articles():
