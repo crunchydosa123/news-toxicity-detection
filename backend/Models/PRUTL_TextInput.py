@@ -76,7 +76,7 @@ def classify_text_as_json(text):
         "Final_Attribute": final_attribute
     }
 
-    return json.dumps(output, indent=4)
+    return json.dumps(output,indent=4)
 
 
 # Example Usage
