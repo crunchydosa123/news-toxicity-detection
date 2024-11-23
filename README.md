@@ -1,2 +1,2 @@
-# news-toxicity-detection
-Created as a Course Project for ML 2024-25
+# EEDAI - Gloabal Peace Scoring
+Created as a EDAI Project for Sem-1 2024-25
