@@ -28,7 +28,7 @@ def extract_and_write_links(keywords):
             # Extract href and text
             count = 0
             for link in links:
-                if count >= 15:
+                if count >= 5:
                     break  # Limit to top 15 links
                 
                 href = link.get_attribute('href')
